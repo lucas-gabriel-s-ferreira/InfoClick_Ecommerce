@@ -3,6 +3,7 @@ package com.api.EcommerceProjeto.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.api.EcommerceProjeto.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,11 +23,15 @@ public class EmpreendedorService {
 
 	public Empreendedor findById(Integer id) {
 		Optional<Empreendedor> obj = repository.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Empreendedor não foi encontrado"));
 	}
 
 	public Integer findIdByEmail(String email) {
-		return repository.findIdByEmail(email);
+		Integer obj =  repository.findIdByEmail(email);
+		if(obj == null) {
+			throw new ObjectNotFoundException("Email não encontrado");
+		}
+		return obj;
 	}
 
 	public List<Empreendedor> findAll() {

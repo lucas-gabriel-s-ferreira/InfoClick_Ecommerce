@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -28,17 +29,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.jwtUtil = jwtUtil;
     }
 
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         try {
             CredenciaisDTO cred = new ObjectMapper().readValue(request.getInputStream(), CredenciaisDTO.class);
-            UsernamePasswordAuthenticationToken authenticationTolken = new UsernamePasswordAuthenticationToken(
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     cred.getEmail(), cred.getPassword(), new ArrayList<>());
-            Authentication authentication = authenticationManager.authenticate(authenticationTolken);
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
             return authentication;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new BadCredentialsException(json().toString());
         }
     }
 
@@ -57,7 +59,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(401);
         response.setContentType("aplication/json");
         response.getWriter().append(json());
-        response.getWriter().flush();
     }
 
     private CharSequence json() {

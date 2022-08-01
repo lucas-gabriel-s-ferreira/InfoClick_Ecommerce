@@ -1,10 +1,12 @@
 package com.api.EcommerceProjeto.controllers.exceptions;
 
 import com.api.EcommerceProjeto.services.exceptions.ObjectNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -46,7 +48,7 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
         StandardError error = new StandardError(
                 System.currentTimeMillis(),
                 HttpStatus.FORBIDDEN.value(),
-                "Ação não permitida",
+                "Forbidden",
                 "Você não tem autorização para realizar essa ação",
                 request.getRequestURI());
 
@@ -59,11 +61,37 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
         StandardError error = new StandardError(
                 System.currentTimeMillis(),
                 HttpStatus.NOT_FOUND.value(),
-                "Objeto não encontrado",
+                "Object Not Found",
                 ex.getMessage(),
                 request.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex,
+                                                                         HttpServletRequest request){
+        StandardError error = new StandardError(
+                System.currentTimeMillis(),
+                HttpStatus.CONFLICT.value(),
+                "Conflict Data Value",
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<StandardError> badCredentialsException(BadCredentialsException ex,
+                                                                 HttpServletRequest request){
+        StandardError error = new StandardError(
+                System.currentTimeMillis(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
 }

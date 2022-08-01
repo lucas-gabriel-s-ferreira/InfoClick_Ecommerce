@@ -1,9 +1,7 @@
 package com.api.EcommerceProjeto.config;
+
 import java.util.Arrays;
 
-import com.api.EcommerceProjeto.Security.JWTAuthenticationFilter;
-import com.api.EcommerceProjeto.Security.JWTAuthorizationFilter;
-import com.api.EcommerceProjeto.Security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -19,10 +17,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
+import com.api.EcommerceProjeto.Security.JWTAuthenticationFilter;
+import com.api.EcommerceProjeto.Security.JWTAuthorizationFilter;
+import com.api.EcommerceProjeto.Security.JWTUtil;
+
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-    private static final String[] PUBLIC_MATCHERS ={"/h2-console/**", "/service/**"};
+    private static final String[] PUBLIC_MATCHERS ={"/h2-console/**"};
 
     @Autowired
     private Environment env;

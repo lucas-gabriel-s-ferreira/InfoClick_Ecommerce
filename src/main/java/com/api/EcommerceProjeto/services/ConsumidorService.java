@@ -27,7 +27,7 @@ public class ConsumidorService {
 
 	public Consumidor findById(Integer id) {
 		Optional<Consumidor> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não foi encontrado: " + id));
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Consumidor não foi encontrado"));
 	}
 
 	public Consumidor create(ConsumidorDTO objDto) {
@@ -66,6 +66,10 @@ public class ConsumidorService {
 	}
 
 	public Integer findIdByEmail(String email){
-		return repository.findIdByEmail(email);
+		Integer obj = repository.findIdByEmail(email);
+		if(obj == null) {
+			throw new ObjectNotFoundException("Email não encontrado");
+		}
+		return obj;
 	}
 }

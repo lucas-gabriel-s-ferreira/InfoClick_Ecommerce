@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.api.EcommerceProjeto.domain.Empreendedor;
@@ -22,7 +23,7 @@ public class LojaService {
 
 	public Loja findById(Integer id) {
 		Optional<Loja> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não foi encontrado: " + id));
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Loja não foi encontrada"));
 	}
 
 	public List<Loja> findAllLojas() {
@@ -56,7 +57,7 @@ public class LojaService {
 	public void delete(Integer id) {
 		Loja obj = findById(id);
 		if(obj.getProdutos().size() > 0){
-			throw new ObjectNotFoundException("Não é possível excluir uma loja que possui produtos");
+			throw new DataIntegrityViolationException("Não é possível excluir uma loja que possui produtos");
 		}
 
 		repository.deleteById(id);
