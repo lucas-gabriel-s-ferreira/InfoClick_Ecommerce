@@ -33,7 +33,7 @@ public class ProdutoService {
 	public Produto create(ProdutoDTO objDto, Integer id_loja) {
 		objDto.setId(null);
 		Optional<Loja> obj = lojaRepository.findById(id_loja);
-		ProdutoDTO newObj = new ProdutoDTO(objDto);
+		Produto newObj = new Produto(objDto);
 
 		newObj.setLoja(obj.get());
 		obj.get().getProdutos().add(newObj);
@@ -47,7 +47,7 @@ public class ProdutoService {
 		objDto.setId(oldObj.getId());
 		objDto.setLoja(oldObj.getLoja());
 		objDto.setDataCriacao(oldObj.getDataCriacao());
-
+		objDto.setDataLimitePromocao(oldObj.getDataLimitePromocao());
 
 		return repository.save(new Produto(objDto));
 	}
@@ -55,7 +55,6 @@ public class ProdutoService {
 	public void delete(Integer id) {
 		repository.deleteById(id);
 	}
-
 
 
 
